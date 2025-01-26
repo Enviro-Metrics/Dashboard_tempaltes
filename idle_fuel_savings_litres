@@ -1,0 +1,40 @@
+Idle Fuel Savings (L) Period 2 = 
+
+VAR idletimehoursPostinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Time (Hours)]),
+     'Fact'[Date] >= DATE(2024,10, 15)
+)
+
+VAR totalIdleFuelBurn = 
+CALCULATE(
+    SUM('Fact'[Idle Fuel Burn (L)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+VAR totalIdleTime = 
+CALCULATE(
+    SUM('Fact'[Idle Time (Hours)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+VAR averaging = 
+IF(
+    totalIdleTime > 0,
+    totalIdleFuelBurn / totalIdleTime,       --supposed to be 4.83
+    BLANK()
+)
+
+
+VAR x = idletimehoursPostinstall *  averaging
+
+VAR IdlefullburnPostinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Fuel Burn (L)]),
+     'Fact'[Date] >= DATE(2024, 10, 15)
+)
+
+VAR y = x - IdlefullburnPostinstall --23.7 & 256.4 for working litres saved 
+
+
+RETURN y
