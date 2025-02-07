@@ -1,0 +1,23 @@
+Total Fuel Burn (L) Pre Installation = 
+
+
+
+VAR totalIdleFuelBurn = 
+CALCULATE(
+    SUM('Fact'[Idle Fuel Burn (L)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+
+
+VAR totalWorkingFuelBurn = 
+CALCULATE(
+    SUM('Fact'[Working Fuel Burn (L)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+Var totalfuelBurn = totalIdleFuelBurn + totalWorkingFuelBurn
+
+Return 
+
+totalfuelBurn
