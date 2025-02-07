@@ -1,0 +1,3 @@
+Idle Cost Savings = 
+
+[Idle Fuel Savings (L) 3] * SELECTEDVALUE('Price Table'[Price (£)], 1.5)
