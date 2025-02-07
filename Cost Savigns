@@ -1,0 +1,6 @@
+Cost Savings = [Fuel Savings] * SELECTEDVALUE('Price Table'[Price (£)], 1.5)
+
+
+------
+
+Price Table = GENERATESERIES(1.00, 2.00, 0.01)
