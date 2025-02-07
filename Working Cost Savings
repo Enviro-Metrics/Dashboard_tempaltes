@@ -1,0 +1,3 @@
+Working Cost Savings = 
+
+[Working Fuel Savings (L) 3] * SELECTEDVALUE('Price Table'[Price (£)], 1.5)
