@@ -1,0 +1,22 @@
+Cumulative Cost Savings = 
+
+
+VAR Costsavings = 
+CALCULATE(
+    [Cost Savings],
+    FILTER(
+        ALLSELECTED('Calendar'[Date]), 
+        'Calendar'[Date] <= MIN(MAX('Calendar'[Date]), DATE(2024, 10, 15))  -- Limit dates to 15/10/2024
+    )
+)
+
+VAR positiveCostSavings =
+IF(
+    Costsavings > 0, 
+    Costsavings, 
+    BLANK()
+)
+
+RETURN
+
+positiveCostSavings
