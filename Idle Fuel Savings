@@ -1,0 +1,38 @@
+Idle Fuel Savings % 3 = 
+
+VAR idleFuelBurnPreinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Fuel Burn (L)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+VAR IdlefullburnPostinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Fuel Burn (L)]),
+     'Fact'[Date] >= DATE(2024, 8, 21) && 'Fact'[Date] <= DATE(2024, 10, 14)
+)
+
+
+VAR idletimehoursPreinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Time (Hours)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+VAR idletimehoursPostinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Time (Hours)]),
+     'Fact'[Date] >= DATE(2024, 8, 21) && 'Fact'[Date] <= DATE(2024, 10, 14)
+)
+
+VAR divpre = idleFuelBurnPreinstall / idletimehoursPreinstall
+
+VAR divpost = IdlefullburnPostinstall / idletimehoursPostinstall
+
+
+VAR v = (divpre - divpost)/ divpre
+
+
+REturn 
+
+v
