@@ -1,0 +1,75 @@
+Fuel Savings % 3 = 
+
+
+// Step 1: Calculate Pre- and Post-Installation Metrics for Idle
+VAR idleFuelBurnPreinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Fuel Burn (L)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+VAR idleFuelBurnPostinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Fuel Burn (L)]),
+    'Fact'[Date] >= DATE(2024, 8, 21) && 'Fact'[Date] <= DATE(2024, 10, 14)
+)
+
+VAR idleTimeHoursPreinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Time (Hours)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+VAR idleTimeHoursPostinstall = 
+CALCULATE(
+    SUM('Fact'[Idle Time (Hours)]),
+    'Fact'[Date] >= DATE(2024, 8, 21) && 'Fact'[Date] <= DATE(2024, 10, 14)
+)
+
+VAR idleBurnRatePre = idleFuelBurnPreinstall / idleTimeHoursPreinstall
+VAR idleBurnRatePost = idleFuelBurnPostinstall / idleTimeHoursPostinstall
+
+VAR idleFuelSavingsPercent = (idleBurnRatePre - idleBurnRatePost) / idleBurnRatePre
+
+// Step 2: Calculate Pre- and Post-Installation Metrics for Working
+VAR workingFuelBurnPreinstall = 
+CALCULATE(
+    SUM('Fact'[Working Fuel Burn (L)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+VAR workingFuelBurnPostinstall = 
+CALCULATE(
+    SUM('Fact'[Working Fuel Burn (L)]),
+    'Fact'[Date] >= DATE(2024, 8, 21) && 'Fact'[Date] <= DATE(2024, 10, 14)
+)
+
+VAR workingTimeHoursPreinstall = 
+CALCULATE(
+    SUM('Fact'[Working Time (Hours)]),
+    'Fact'[Date] < DATE(2024, 8, 21)
+)
+
+VAR workingTimeHoursPostinstall = 
+CALCULATE(
+    SUM('Fact'[Working Time (Hours)]),
+    'Fact'[Date] >= DATE(2024, 8, 21) && 'Fact'[Date] <= DATE(2024, 10, 14)
+)
+
+VAR workingBurnRatePre = workingFuelBurnPreinstall / workingTimeHoursPreinstall
+VAR workingBurnRatePost = workingFuelBurnPostinstall / workingTimeHoursPostinstall
+
+VAR workingFuelSavingsPercent = (workingBurnRatePre - workingBurnRatePost) / workingBurnRatePre
+
+// Step 3: Calculate Weighted Overall Fuel Savings %
+VAR totalFuelBurnPreinstall = idleFuelBurnPreinstall + workingFuelBurnPreinstall
+VAR totalFuelBurnPostinstall = idleFuelBurnPostinstall + workingFuelBurnPostinstall
+
+VAR idleWeight = (idleFuelBurnPostinstall / totalFuelBurnPostinstall)
+VAR workingWeight = (workingFuelBurnPostinstall / totalFuelBurnPostinstall)
+
+VAR overallFuelSavingsPercent = 
+    (idleFuelSavingsPercent * idleWeight) + (workingFuelSavingsPercent * workingWeight)
+
+RETURN
+overallFuelSavingsPercent
