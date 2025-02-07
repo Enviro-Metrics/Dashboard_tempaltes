@@ -1,0 +1,28 @@
+Break Even Days = 
+
+VAR EquipmentCost = 3500  -- need to know costing
+
+VAR TotalCostSavings = [Cost Savings]
+
+VAR DaysWithSavings = 
+    COUNTROWS(
+        FILTER(
+            ALL('Calendar'),
+            NOT(ISBLANK([Cost Savings]))
+        )
+    )
+VAR AverageDailySavings = 
+    IF(
+        DaysWithSavings > 0,
+        DIVIDE(TotalCostSavings, DaysWithSavings),
+        BLANK()
+    )
+VAR TotalDaysRequired = DIVIDE(EquipmentCost, AverageDailySavings, BLANK())
+RETURN
+    IF(
+        ISBLANK(AverageDailySavings) || AverageDailySavings <= 0,
+        BLANK(),
+        TotalDaysRequired
+    ) 
+   
+
